@@ -1,94 +1,123 @@
-function getComputerChoice() {
-    let choice = Math.floor(Math.random() * 3);
-    // console.log(choice);
+let button = document.querySelector(".buttons");
+let playerScore = document.querySelector(".playerScore");
+let computerScore = document.querySelector(".computerScore");
+let gameLog = document.querySelector(".gameLog");
 
-    switch (choice) {
+let playerScoreTracker = 0;
+let computerScoreTracker = 0;
+
+button.addEventListener('click', playRound);
+
+function playRound(event) {
+    //first generate computer's move
+    let computerMove = generateComputerMove();
+
+    //now read event info from button press
+    let playerMove = event.target.textContent;
+
+    //create element and add to log
+    let element = document.createElement('p');
+
+    if (playerMove === computerMove) {
+        element.textContent = `Tie: ${computerMove} ties against ${playerMove}`;
+    }
+    else if (playerMove == "rock" && computerMove == "scissors" || 
+    playerMove == "scissors" && computerMove == "paper" ||
+    playerMove == "paper" && computerMove == "rock") {
+        element.textContent = `Win: Player's ${playerMove} wins against ${computerMove}`;
+        updatePlayerScore();
+    }
+    else {
+        element.textContent = `Lose: Player's ${playerMove} loses against ${computerMove}`;
+        updateComputerScore();
+    }
+
+    gameLog.appendChild(element);
+
+    setTimeout(checkGameEnd, 10);
+
+}
+
+function updatePlayerScore() {
+    playerScoreTracker += 1;
+    playerScore.textContent = playerScoreTracker;
+}
+function updateComputerScore() {
+    computerScoreTracker += 1;
+    computerScore.textContent = computerScoreTracker;
+}
+function checkGameEnd() {
+    if (playerScoreTracker == 5) {
+        alert("Congrats. You win!");
+        resetDisplay();
+    }
+    else if (computerScoreTracker == 5) {
+        alert("You lose :((((((");
+        resetDisplay();
+    }
+}
+function resetDisplay() {
+    playerScoreTracker = 0;
+    computerScoreTracker = 0;
+    playerScore.textContent = '0';
+    computerScore.textContent = '0';
+
+    while (gameLog.firstChild) {
+        gameLog.removeChild(gameLog.firstChild);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+function generateComputerMove() {
+    let random = Math.floor(Math.random() * 3);
+
+    switch(random) {
         case 0:
-            return("rock");
+            return 'rock';
         case 1:
-            return("paper");
+            return 'paper';
         case 2:
-            return("scissors");
-
+            return 'scissors';
     }
 }
 
-function playRPS(playerSelection, computerSelection) {
-    //manually entered playerSelection. Prints out both plays and result
 
-    let player = playerSelection.toLowerCase();
-    let computer = computerSelection();
 
-    console.log("player played " + player);
-    console.log("computer played " + computer);
 
-    if (player == computer) {
-        return `Tie. Neither wins`;
+
+
+
+
+
+
+
+
+
+
+/*
+button.addEventListener('click', (event) => {
+    let target = event.target;
+
+    switch(target.className) {
+        case 'rock':
+            console.log("rock");
+            break;
+        case 'paper':
+            console.log("paper");
+            break;
+        case 'scissors':
+            console.log('scissors');
+            break;
     }
-    else if (player == "rock" && computer == "scissors" || 
-        player == "scissors" && computer == "paper" ||
-        player == "paper" && computer == "rock") {
-        return `You win! ${player} beats ${computer}.`;
-    }
-    else {
-        return `You lose. ${computer} beats ${player}.`;
-    }
-}
-
-function playRPSWL(playerSelection, computerSelection) {
-    //returns boolean for win or lose
-
-    let player = playerSelection.toLowerCase();
-    let computer = computerSelection();
-
-    // console.log("player played " + player);
-    // console.log("computer played " + computer);
-
-    if (player == computer) {
-        return 0;
-    }
-    else if (player == "rock" && computer == "scissors" || 
-        player == "scissors" && computer == "paper" ||
-        player == "paper" && computer == "rock") {
-        return 1;
-    }
-    else {
-        return 0;
-    }
-}
-
-function playRPSWLInput(playerSelection, computerSelection) {
-    let player = playerSelection.toLowerCase();
-    let computer = computerSelection();
-
-    // console.log("player played " + player);
-    // console.log("computer played " + computer);
-
-    if (player == computer) {
-        return 0;
-    }
-    else if (player == "rock" && computer == "scissors" || 
-        player == "scissors" && computer == "paper" ||
-        player == "paper" && computer == "rock") {
-        return 1;
-    }
-    else {
-        return 0;
-    }
-}
-
-function game() {
-    // gets user input for 5 matches, then prints out number of times you win
-    let winCount = 0;
-    for (let i = 0; i < 5; i++) {
-        if (playRPSWL(prompt(), getComputerChoice)) {
-            winCount++;
-        }
-    }
-    console.log("you won " + winCount + " times");
-}
-
-//console.log(getComputerChoice());
-//console.log(playRPS("ROCK", getComputerChoice));
-game();
-
+})
+*/
